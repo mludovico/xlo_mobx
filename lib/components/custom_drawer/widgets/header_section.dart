@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:xlo_mobx/screens/login/login_screen.dart';
+import 'package:xlo_mobx/stores/page_store.dart';
+import 'package:xlo_mobx/stores/session_store.dart';
 
 class HeaderSection extends StatelessWidget {
+
+  final SessionStore sessionStore = GetIt.I<SessionStore>();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pop();
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => LoginScreen())
-        );
+        if (sessionStore.isLoggedIn) {
+          GetIt.I<PageStore>().setPage(4);
+        } else {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => LoginScreen()));
+        }
       },
       child: Container(
         color: Colors.purple,
@@ -25,7 +34,9 @@ class HeaderSection extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Acesse sua conta agora!',
+                    sessionStore.isLoggedIn
+                      ? sessionStore.user.name
+                      : 'Acesse sua conta agora!',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -33,7 +44,9 @@ class HeaderSection extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Clique aqui',
+                    sessionStore.isLoggedIn
+                      ? sessionStore.user.mail
+                      : 'Clique aqui',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 14,

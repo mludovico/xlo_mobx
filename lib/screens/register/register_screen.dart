@@ -12,9 +12,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-
   final SignupStore signupStore = SignupStore();
-
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +26,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: SingleChildScrollView(
           child: Card(
             margin: const EdgeInsets.symmetric(horizontal: 32),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16)
-            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             elevation: 0,
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -69,16 +66,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     builder: (_) => TextField(
                       enabled: !signupStore.loading,
                       decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        isDense: true,
-                        hintText: 'Exemplo: João S.',
-                        errorText: signupStore.nameError
-                      ),
+                          border: const OutlineInputBorder(),
+                          isDense: true,
+                          hintText: 'Exemplo: João S.',
+                          errorText: signupStore.nameError),
                       onChanged: signupStore.setName,
                       keyboardType: TextInputType.emailAddress,
                     ),
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 3),
                     child: Text(
@@ -105,16 +103,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     builder: (_) => TextField(
                       enabled: !signupStore.loading,
                       decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        isDense: true,
-                        hintText: 'Exemplo: joao@gmail.com',
-                        errorText: signupStore.emailError
-                      ),
+                          border: const OutlineInputBorder(),
+                          isDense: true,
+                          hintText: 'Exemplo: joao@gmail.com',
+                          errorText: signupStore.emailError),
                       onChanged: signupStore.setEmail,
                       keyboardType: TextInputType.emailAddress,
                     ),
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   Row(
                     children: [
                       Padding(
@@ -145,20 +144,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     builder: (_) => TextField(
                       enabled: !signupStore.loading,
                       decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        isDense: true,
-                        hintText: '(21) 9999-9999',
-                        errorText: signupStore.phoneError
-                      ),
+                          border: const OutlineInputBorder(),
+                          isDense: true,
+                          hintText: '(21) 9999-9999',
+                          errorText: signupStore.phoneError),
                       onChanged: signupStore.setPhone,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        FilteringTextInputFormatter.digitsOnly,
                         TelefoneInputFormatter()
                       ],
                       keyboardType: TextInputType.phone,
                     ),
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 3),
                     child: Text(
@@ -182,19 +182,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   Observer(
-                    builder: (_) => TextField(
-                      enabled: !signupStore.loading,
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        isDense: true,
-                        errorText: signupStore.pass1Error
-                      ),
-                      onChanged: signupStore.setPass1,
-                      obscureText: true,
-                      keyboardType: TextInputType.visiblePassword,
-                    )
+                      builder: (_) => TextField(
+                            enabled: !signupStore.loading,
+                            decoration: InputDecoration(
+                                border: const OutlineInputBorder(),
+                                isDense: true,
+                                errorText: signupStore.pass1Error),
+                            onChanged: signupStore.setPass1,
+                            obscureText: true,
+                            keyboardType: TextInputType.visiblePassword,
+                          )),
+                  const SizedBox(
+                    height: 16,
                   ),
-                  const SizedBox(height: 16,),
                   Row(
                     children: [
                       Padding(
@@ -225,49 +225,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     builder: (_) => TextField(
                       enabled: !signupStore.loading,
                       decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        isDense: true,
-                        errorText: signupStore.pass2Error
-                      ),
+                          border: const OutlineInputBorder(),
+                          isDense: true,
+                          errorText: signupStore.pass2Error),
                       onChanged: signupStore.setPass2,
                       obscureText: true,
                       keyboardType: TextInputType.visiblePassword,
                     ),
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   Container(
                     height: 40,
                     child: Observer(
-                      builder: (_) => ElevatedButton(
-                        style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)
-                            ),
-                          ),
-                          foregroundColor: MaterialStateProperty.all(Colors.white),
-                          backgroundColor: MaterialStateProperty.resolveWith((states) {
-                            if (states.contains(MaterialState.disabled))
-                              return Colors.orange.withAlpha(120);
-                            return Colors.orange;
-                          }),
-                        ),
-                        onPressed: signupStore.signUp,
-                        child: signupStore.loading ? SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation(Colors.white),
-                          ),
-                        )
-                            :
-                        Text(
-                          'CADASTRAR',
-                        ),
-                      )
-                    ),
+                        builder: (_) => ElevatedButton(
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                ),
+                                foregroundColor:
+                                    MaterialStateProperty.all(Colors.white),
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
+                                  if (states.contains(MaterialState.disabled))
+                                    return Colors.orange.withAlpha(120);
+                                  return Colors.orange;
+                                }),
+                              ),
+                              onPressed: signupStore.signUp,
+                              child: signupStore.loading
+                                  ? SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        valueColor: AlwaysStoppedAnimation(
+                                            Colors.white),
+                                      ),
+                                    )
+                                  : Text(
+                                      'CADASTRAR',
+                                    ),
+                            )),
                   ),
-                  const SizedBox(height: 12,),
+                  const SizedBox(
+                    height: 12,
+                  ),
                   Divider(),
                   Wrap(
                     alignment: WrapAlignment.spaceBetween,
@@ -284,8 +288,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         onTap: () {
                           Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (_) => LoginScreen())
-                          );
+                              MaterialPageRoute(builder: (_) => LoginScreen()));
                         },
                       ),
                     ],

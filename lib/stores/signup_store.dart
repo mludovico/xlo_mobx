@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get_it/get_it.dart';
 import 'package:xlo_mobx/helpers/extensions.dart';
 import 'package:mobx/mobx.dart';
 import 'package:xlo_mobx/models/user.dart';
 import 'package:xlo_mobx/repositories/user_repository.dart';
+import 'package:xlo_mobx/stores/session_store.dart';
 
 part 'signup_store.g.dart';
 
@@ -136,6 +138,7 @@ abstract class _SignupStore with Store {
     try {
       final retrievedUser = await UserRepository().signUp(user);
       print(retrievedUser);
+      GetIt.I<SessionStore>().setUser(retrievedUser);
     } catch (e) {
       setError(e.toString());
     }

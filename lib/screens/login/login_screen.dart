@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
+import 'package:xlo_mobx/components/custom_drawer/error_box.dart';
 import 'package:xlo_mobx/screens/register/register_screen.dart';
+import 'package:xlo_mobx/stores/login_store.dart';
+import 'package:xlo_mobx/stores/session_store.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -7,6 +13,40 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  LoginStore loginStore = LoginStore();
+  ReactionDisposer disposer;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final session = GetIt.I<SessionStore>();
+    disposer = reaction(
+      (_) => session.isLoggedIn,
+      (isLoggedIn) {
+        if (isLoggedIn) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.greenAccent,
+              duration: Duration(seconds: 5),
+              content: Row(
+                children: [
+                  Icon(
+                    Icons.check_circle,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 8,),
+                  Text('Bem vindo ${session.user.name}'),
+                ],
+              ),
+            )
+          );
+        }
+      }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +77,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Colors.grey[900],
                     ),
                   ),
+                  Observer(
+                    builder: (context) => ErrorBox(
+                      message: loginStore.error,
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 3, bottom: 8),
                     child: Text(
@@ -48,12 +93,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  TextField(
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      isDense: true,
+                  Observer(
+                    builder: (context) => TextField(
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        isDense: true,
+                        errorText: loginStore.emailError
+                      ),
+                      onChanged: loginStore.setEmail,
+                      enabled: !loginStore.loading,
+                      keyboardType: TextInputType.emailAddress,
                     ),
-                    keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 16,),
                   Padding(
@@ -82,39 +132,49 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                   ),
-                  TextField(
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      isDense: true,
+                  Observer(
+                    builder: (context) => TextField(
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        isDense: true,
+                        errorText: loginStore.passError,
+                      ),
+                      onChanged: loginStore.setPass,
+                      enabled: !loginStore.loading,
+                      obscureText: true,
+                      keyboardType: TextInputType.visiblePassword,
                     ),
-                    obscureText: true,
-                    keyboardType: TextInputType.visiblePassword,
                   ),
                   const SizedBox(height: 16,),
                   Container(
                     height: 40,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)
+                    child: Observer(
+                      builder: (context) => ElevatedButton(
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)
+                            ),
                           ),
+                          foregroundColor: MaterialStateProperty.all(Colors.white),
+                          backgroundColor: MaterialStateProperty.resolveWith((states) {
+                            if (states.contains(MaterialState.disabled))
+                              return Colors.orange.withAlpha(120);
+                            return Colors.orange;
+                          }),
                         ),
-                        foregroundColor: MaterialStateProperty.all(Colors.white),
-                        backgroundColor: MaterialStateProperty.resolveWith((states) {
-                          if (states.contains(MaterialState.disabled))
-                            return Colors.grey[400];
-                          return Colors.orange;
-                        }),
-                      ),
-                      onPressed: () {
-
-                      },
-                      child: Text(
-                        'ENTRAR',
-                        // style: TextStyle(
-                        //   color: Colors.white,
-                        // ),
+                        onPressed: loginStore.signIn,
+                        child: loginStore.loading ? SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation(Colors.white),
+                          )
+                        )
+                          :
+                        Text(
+                          'ENTRAR',
+                        ),
                       ),
                     ),
                   ),
@@ -148,5 +208,11 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    disposer();
+    super.dispose();
   }
 }
