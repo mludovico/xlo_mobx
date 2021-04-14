@@ -16,13 +16,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primarySwatch: Colors.purple,
-        appBarTheme: AppBarTheme(
-          elevation: 0,
-        ),
-        backgroundColor: Colors.purple,
-        scaffoldBackgroundColor: Colors.purple
-      ),
+          primarySwatch: Colors.purple,
+          appBarTheme: AppBarTheme(
+            elevation: 0,
+          ),
+          backgroundColor: Colors.purple,
+          scaffoldBackgroundColor: Colors.purple),
       debugShowCheckedModeBanner: false,
       title: 'XLO',
       home: BaseScreen(),

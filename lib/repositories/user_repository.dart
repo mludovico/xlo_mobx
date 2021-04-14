@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:xlo_mobx/models/user.dart';
 import 'package:xlo_mobx/repositories/parse_errors.dart';
@@ -47,8 +45,8 @@ class UserRepository {
     print(parseUser);
     print('type of parse user: ${parseUser.runtimeType}');
     if (parseUser != null) {
-      final response = await ParseUser
-          .getCurrentUserFromServer(parseUser.sessionToken);
+      final response =
+          await ParseUser.getCurrentUserFromServer(parseUser.sessionToken);
       if (response.success) {
         return User.fromJson(response.result.toJson());
       } else {

@@ -22,7 +22,16 @@ class ImagesField extends StatelessWidget {
     }
 
     return Container(
-      color: Colors.grey[200],
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        border: createStore.imagesError != null
+            ? Border(
+                bottom: BorderSide(
+                  color: Colors.red,
+                ),
+              )
+            : null,
+      ),
       height: 120,
       child: Observer(
         builder: (_) => ListView.builder(
@@ -35,23 +44,25 @@ class ImagesField extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 3),
                 child: GestureDetector(
-                  onTap: () {
-                    if (Platform.isAndroid) {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (_) => ImageSourceModel(
-                          onImageSelected: onImageSelected,
-                        ),
-                      );
-                    } else {
-                      showCupertinoModalPopup(
-                        context: context,
-                        builder: (_) => ImageSourceModel(
-                          onImageSelected: onImageSelected,
-                        ),
-                      );
-                    }
-                  },
+                  onTap: createStore.loading
+                      ? null
+                      : () {
+                          if (Platform.isAndroid) {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (_) => ImageSourceModel(
+                                onImageSelected: onImageSelected,
+                              ),
+                            );
+                          } else {
+                            showCupertinoModalPopup(
+                              context: context,
+                              builder: (_) => ImageSourceModel(
+                                onImageSelected: onImageSelected,
+                              ),
+                            );
+                          }
+                        },
                   child: CircleAvatar(
                     radius: 44,
                     backgroundColor: Colors.grey[300],
