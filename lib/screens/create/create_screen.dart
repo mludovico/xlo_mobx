@@ -2,12 +2,16 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
 import 'package:xlo_mobx/components/custom_drawer/custom_drawer.dart';
+import 'package:xlo_mobx/components/custom_drawer/error_box.dart';
 import 'package:xlo_mobx/screens/category/category_screen.dart';
 import 'package:xlo_mobx/screens/create/widgets/cep_field.dart';
 import 'package:xlo_mobx/screens/create/widgets/hide_phone_field.dart';
 import 'package:xlo_mobx/screens/create/widgets/images_field.dart';
 import 'package:xlo_mobx/stores/create_store.dart';
+import 'package:xlo_mobx/stores/page_store.dart';
 
 class CreateScreen extends StatefulWidget {
   @override
@@ -24,6 +28,14 @@ class _CreateScreenState extends State<CreateScreen> {
   final EdgeInsets contentPadding = const EdgeInsets.fromLTRB(16, 10, 12, 10);
 
   final CreateStore createStore = CreateStore();
+
+  @override
+  void initState() {
+    super.initState();
+    when((_) => createStore.savedAd != null, () {
+      GetIt.I<PageStore>().setPage(0);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -184,6 +196,11 @@ class _CreateScreenState extends State<CreateScreen> {
                 ),
               ),
               HidePhoneField(createStore),
+              Observer(
+                builder: (_) => ErrorBox(
+                  message: createStore.error,
+                ),
+              ),
               Observer(
                 builder: (_) => GestureDetector(
                   onTap: createStore.invalidSendPressed,

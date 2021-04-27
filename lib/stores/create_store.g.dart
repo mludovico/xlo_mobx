@@ -162,6 +162,43 @@ mixin _$CreateStore on _CreateStore, Store {
     });
   }
 
+  final _$errorAtom = Atom(name: '_CreateStore.error');
+
+  @override
+  String get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(String value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
+  final _$savedAdAtom = Atom(name: '_CreateStore.savedAd');
+
+  @override
+  Ad get savedAd {
+    _$savedAdAtom.reportRead();
+    return super.savedAd;
+  }
+
+  @override
+  set savedAd(Ad value) {
+    _$savedAdAtom.reportWrite(value, super.savedAd, () {
+      super.savedAd = value;
+    });
+  }
+
+  final _$_sendAsyncAction = AsyncAction('_CreateStore._send');
+
+  @override
+  Future<void> _send() {
+    return _$_sendAsyncAction.run(() => super._send());
+  }
+
   final _$_CreateStoreActionController = ActionController(name: '_CreateStore');
 
   @override
@@ -251,6 +288,8 @@ priceText: ${priceText},
 hidePhone: ${hidePhone},
 showErrors: ${showErrors},
 loading: ${loading},
+error: ${error},
+savedAd: ${savedAd},
 imagesValid: ${imagesValid},
 titleValid: ${titleValid},
 descriptionValid: ${descriptionValid},

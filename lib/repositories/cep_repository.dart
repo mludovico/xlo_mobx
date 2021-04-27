@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:xlo_mobx/models/Address.dart';
+import 'package:xlo_mobx/models/address.dart';
 import 'package:xlo_mobx/models/city.dart';
 import 'package:xlo_mobx/repositories/ibge_repository.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:xlo_mobx/models/Address.dart';
+import 'package:xlo_mobx/models/address.dart';
 import 'package:xlo_mobx/repositories/cep_repository.dart';
 
 void main() {

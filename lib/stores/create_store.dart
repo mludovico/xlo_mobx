@@ -1,8 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
-import 'package:xlo_mobx/models/Address.dart';
+import 'package:xlo_mobx/models/ad.dart';
+import 'package:xlo_mobx/models/address.dart';
 import 'package:xlo_mobx/models/category.dart';
+import 'package:xlo_mobx/repositories/ad_repository.dart';
 import 'package:xlo_mobx/stores/cep_store.dart';
+import 'package:xlo_mobx/stores/session_store.dart';
 
 part 'create_store.g.dart';
 
@@ -129,6 +133,9 @@ abstract class _CreateStore with Store {
   @observable
   bool loading = false;
 
+  @observable
+  String error;
+
   @action
   void setLoading(bool value) => loading = value;
 
@@ -136,9 +143,33 @@ abstract class _CreateStore with Store {
       ? () async {
           setLoading(true);
           print('started sending');
-          await Future.delayed(Duration(seconds: 10));
+          await _send();
           setLoading(false);
           print('finished sending');
         }
       : null;
+
+  @observable
+  Ad savedAd;
+
+  @action
+  Future<void> _send() async {
+    final ad = Ad(
+      title: title,
+      description: description,
+      category: category,
+      price: price,
+      hidePhone: hidePhone,
+      images: images,
+      address: address,
+      user: GetIt.I<SessionStore>().user,
+    );
+    try {
+      savedAd = await AdRepository().save(ad);
+      print(savedAd);
+    } catch (e) {
+      print('Deu ruim');
+      error = e;
+    }
+  }
 }

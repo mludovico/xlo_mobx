@@ -1,5 +1,5 @@
 import 'package:mobx/mobx.dart';
-import 'package:xlo_mobx/models/Address.dart';
+import 'package:xlo_mobx/models/address.dart';
 import 'package:xlo_mobx/repositories/cep_repository.dart';
 
 part 'cep_store.g.dart';

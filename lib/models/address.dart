@@ -10,7 +10,9 @@ class Address {
   String district;
 
   factory Address.fromJson(Map json) => Address(
-        cep: json['cep'],
+        cep: json['postalCode'] ?? json['cep'],
+        city: City.fromJson(json),
+        uf: UF(initials: json['uf']),
         district: json['bairro'],
       );
 
