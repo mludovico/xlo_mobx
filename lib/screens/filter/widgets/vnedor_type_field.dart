@@ -11,45 +11,45 @@ class VendorTypeField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SectionLabel('Anúncio'),
         Observer(
-          builder: (_) => Wrap(
-            runSpacing: 4,
-            children: [
-              ChipButton(
-                'Particular',
-                filterStore.vendorType,
-                VENDOR_TYPE_PARTICULAR & filterStore.vendorType,
-                () {
-                  if (filterStore.isTypeParticular) {
-                    if (filterStore.isTypeProfessional) {
-                      filterStore.resetVendorType(VENDOR_TYPE_PARTICULAR);
-                    } else {
-                      filterStore.selectVendorType(VENDOR_TYPE_PROFESSIONAL);
-                    }
-                  } else
-                    filterStore.setVendorType(VENDOR_TYPE_PARTICULAR);
-                },
-              ),
-              SizedBox(width: 8),
-              ChipButton(
-                'Profissional',
-                filterStore.vendorType,
-                VENDOR_TYPE_PROFESSIONAL & filterStore.vendorType,
-                () {
-                  if (filterStore.isTypeProfessional) {
+          builder: (_) => SingleChildScrollView(
+            child: Row(
+              children: [
+                ChipButton(
+                  'Particular',
+                  filterStore.vendorType,
+                  VENDOR_TYPE_PARTICULAR | filterStore.vendorType,
+                  () {
                     if (filterStore.isTypeParticular) {
-                      filterStore.resetVendorType(VENDOR_TYPE_PROFESSIONAL);
-                    } else {
-                      filterStore.selectVendorType(VENDOR_TYPE_PARTICULAR);
-                    }
-                  } else
-                    filterStore.setVendorType(VENDOR_TYPE_PROFESSIONAL);
-                },
-              ),
-            ],
+                      if (filterStore.isTypeProfessional) {
+                        filterStore.resetVendorType(VENDOR_TYPE_PARTICULAR);
+                      } else {
+                        filterStore.selectVendorType(VENDOR_TYPE_PROFESSIONAL);
+                      }
+                    } else
+                      filterStore.setVendorType(VENDOR_TYPE_PARTICULAR);
+                  },
+                ),
+                SizedBox(width: 8),
+                ChipButton(
+                  'Profissional',
+                  filterStore.vendorType,
+                  VENDOR_TYPE_PROFESSIONAL | filterStore.vendorType,
+                  () {
+                    if (filterStore.isTypeProfessional) {
+                      if (filterStore.isTypeParticular) {
+                        filterStore.resetVendorType(VENDOR_TYPE_PROFESSIONAL);
+                      } else {
+                        filterStore.selectVendorType(VENDOR_TYPE_PARTICULAR);
+                      }
+                    } else
+                      filterStore.setVendorType(VENDOR_TYPE_PROFESSIONAL);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ],

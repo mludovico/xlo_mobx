@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:xlo_mobx/screens/base/base_screen.dart';
 import 'package:xlo_mobx/services/init_parse.dart';
 import 'package:xlo_mobx/services/setup_locators.dart';
@@ -24,6 +25,14 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.purple),
       debugShowCheckedModeBanner: false,
       title: 'XLO',
+      supportedLocales: const [
+        Locale('pt', 'BR'),
+      ],
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
       home: BaseScreen(),
     );
   }

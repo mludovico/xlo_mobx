@@ -23,6 +23,13 @@ mixin _$FilterStore on _FilterStore, Store {
           () => super.isTypeParticular,
           name: '_FilterStore.isTypeParticular'))
       .value;
+  Computed<bool> _$isFormValidComputed;
+
+  @override
+  bool get isFormValid =>
+      (_$isFormValidComputed ??= Computed<bool>(() => super.isFormValid,
+              name: '_FilterStore.isFormValid'))
+          .value;
 
   final _$orderByAtom = Atom(name: '_FilterStore.orderBy');
 
@@ -138,7 +145,8 @@ minPrice: ${minPrice},
 maxPrice: ${maxPrice},
 vendorType: ${vendorType},
 priceError: ${priceError},
-isTypeParticular: ${isTypeParticular}
+isTypeParticular: ${isTypeParticular},
+isFormValid: ${isFormValid}
     ''';
   }
 }

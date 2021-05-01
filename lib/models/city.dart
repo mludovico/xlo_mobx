@@ -6,7 +6,7 @@ class City {
 
   factory City.fromJson(Map json) => City(
         id: json['id'],
-        name: json['nome'],
+        name: json.keys.contains('nome') ? json['nome'] : json['city'],
       );
 
   Map<String, dynamic> toJson() => {

@@ -28,10 +28,10 @@ class PriceRangeField extends StatelessWidget {
             ),
           ],
         ),
-        Observer(
-          builder: (_) => Container(
-            padding: const EdgeInsets.only(top: 8, bottom: 16),
-            child: Text(
+        Container(
+          padding: const EdgeInsets.only(top: 8, bottom: 16),
+          child: Observer(
+            builder: (_) => Text(
               filterStore.priceError ?? '',
               style: TextStyle(
                 color: Colors.red,
@@ -40,7 +40,7 @@ class PriceRangeField extends StatelessWidget {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

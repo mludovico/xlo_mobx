@@ -23,7 +23,8 @@ class PriceField extends StatelessWidget {
           RealInputFormatter(centavos: true),
         ],
         onChanged: (textValue) {
-          onChanged(int.tryParse(textValue.replaceAll('.', '')));
+          onChanged(
+              int.tryParse(textValue.replaceAll('.', '').replaceAll(',', '')));
         },
         initialValue: initialValue?.toString(),
       ),

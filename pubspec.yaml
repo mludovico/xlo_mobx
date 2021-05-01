@@ -39,6 +39,12 @@ dependencies:
   dio: ^3.0.10
   shared_preferences: ^0.5.12+2
   path: ^1.7.0
+  cached_network_image: ^2.4.1
+  flutter_localizations:
+    sdk: flutter
+
+dependency_overrides:
+  intl: ^0.17.0-nullsafety.2
 
 dev_dependencies:
   flutter_test:
