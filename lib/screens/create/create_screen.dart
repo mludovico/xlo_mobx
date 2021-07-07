@@ -6,19 +6,28 @@ import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:xlo_mobx/components/custom_drawer/custom_drawer.dart';
 import 'package:xlo_mobx/components/custom_drawer/error_box.dart';
+import 'package:xlo_mobx/models/ad.dart';
 import 'package:xlo_mobx/screens/category/category_screen.dart';
 import 'package:xlo_mobx/screens/create/widgets/cep_field.dart';
 import 'package:xlo_mobx/screens/create/widgets/hide_phone_field.dart';
 import 'package:xlo_mobx/screens/create/widgets/images_field.dart';
+import 'package:xlo_mobx/screens/my_ads/my_ads_screen.dart';
 import 'package:xlo_mobx/stores/create_store.dart';
 import 'package:xlo_mobx/stores/page_store.dart';
 
 class CreateScreen extends StatefulWidget {
+  final Ad ad;
+  CreateScreen({this.ad});
+
   @override
-  _CreateScreenState createState() => _CreateScreenState();
+  _CreateScreenState createState() => _CreateScreenState(ad);
 }
 
 class _CreateScreenState extends State<CreateScreen> {
+  _CreateScreenState(Ad ad)
+      : createStore = CreateStore(ad ?? Ad()),
+        editing = ad != null;
+
   final TextStyle labelStyle = const TextStyle(
     fontWeight: FontWeight.w800,
     color: Colors.grey,
@@ -27,22 +36,32 @@ class _CreateScreenState extends State<CreateScreen> {
 
   final EdgeInsets contentPadding = const EdgeInsets.fromLTRB(16, 10, 12, 10);
 
-  final CreateStore createStore = CreateStore();
+  final CreateStore createStore;
+  final editing;
 
   @override
   void initState() {
     super.initState();
     when((_) => createStore.savedAd != null, () {
-      GetIt.I<PageStore>().setPage(0);
+      if (editing)
+        Navigator.of(context).pop(true);
+      else {
+        GetIt.I<PageStore>().setPage(0);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => MyAdsScreen(initialTab: 1),
+          ),
+        );
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: CustomDrawer(),
+      drawer: editing ? null : CustomDrawer(),
       appBar: AppBar(
-        title: Text('Novo anúncio'),
+        title: Text(editing ? 'Editar anúncio' : 'Novo anúncio'),
       ),
       body: SingleChildScrollView(
         child: Card(
@@ -84,6 +103,7 @@ class _CreateScreenState extends State<CreateScreen> {
               ),
               Observer(
                 builder: (_) => TextFormField(
+                  initialValue: createStore.title,
                   decoration: InputDecoration(
                     labelText: 'Título *',
                     labelStyle: labelStyle,
@@ -96,6 +116,7 @@ class _CreateScreenState extends State<CreateScreen> {
               ),
               Observer(
                 builder: (_) => TextFormField(
+                  initialValue: createStore.description,
                   decoration: InputDecoration(
                     labelText: 'Descrição *',
                     labelStyle: labelStyle,
@@ -180,6 +201,7 @@ class _CreateScreenState extends State<CreateScreen> {
               CepField(createStore),
               Observer(
                 builder: (_) => TextFormField(
+                  initialValue: createStore.priceText,
                   decoration: InputDecoration(
                       labelText: 'Preço *',
                       labelStyle: labelStyle,

@@ -1,3 +1,5 @@
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
+
 class City {
   City({this.id, this.name});
 
@@ -13,6 +15,11 @@ class City {
         'id': id,
         'nome': name,
       };
+
+  factory City.fromParse(ParseObject pObject) => City(
+        id: pObject.get('id'),
+        name: pObject.get('nome') ?? pObject.get('city'),
+      );
 
   @override
   String toString() {

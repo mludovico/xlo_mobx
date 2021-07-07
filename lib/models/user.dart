@@ -1,3 +1,4 @@
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:xlo_mobx/repositories/table_keys.dart';
 
 enum UserType { PARTICULAR, PROFESSIONAL }
@@ -32,6 +33,15 @@ class User {
         createdAt: DateTime.tryParse(json[keyUserCreated] ?? ''),
         updatedAt: DateTime.tryParse(json[keyUserUpdated] ?? ''),
       );
+
+  User.fromParse(ParseObject parseObject)
+      : id = parseObject.objectId,
+        name = parseObject.get(keyUserName),
+        mail = parseObject.get(keyUserMail),
+        phone = parseObject.get(keyUserPhone),
+        createdAt = parseObject.get(keyUserCreated),
+        updatedAt = parseObject.get(keyUserUpdated),
+        type = UserType.values[parseObject.get(keyUserType) ?? 0];
 
   Map<String, dynamic> toJson() => {
         keyUserId: id ?? '',

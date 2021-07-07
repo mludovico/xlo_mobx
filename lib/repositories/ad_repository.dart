@@ -21,6 +21,7 @@ class AdRepository {
     parseAcl.setPublicWriteAccess(allowed: false);
     adObject.setACL(parseAcl);
 
+    adObject.objectId = ad.id;
     adObject.set<String>(keyAdTitle, ad.title);
     adObject.set<String>(keyAdDescription, ad.description);
     adObject.set<bool>(keyAdHidePhone, ad.hidePhone);
@@ -39,7 +40,7 @@ class AdRepository {
       if (response.success) {
         final result = jsonDecode(response.result.toString());
         print('Resultado: $result');
-        final ad = Ad.fromJson(result);
+        final ad = Ad.fromParse(response.result);
         print(ad.title);
         return ad;
       } else {
@@ -86,10 +87,12 @@ class AdRepository {
     FilterStore filter,
     String search,
     Category category,
+    int page,
   }) async {
     final queryBuilder = QueryBuilder<ParseObject>(ParseObject(keyAdTable));
     queryBuilder.includeObject([keyAdOwner, keyAdCategory]);
-    queryBuilder.setLimit(20);
+    queryBuilder.setAmountToSkip(page * 10);
+    queryBuilder.setLimit(10);
     queryBuilder.whereEqualTo(keyAdStatus, AdStatus.ACTIVE.index);
     if (search != null && search.trim().isNotEmpty) {
       queryBuilder.whereContains(keyAdTitle, search, caseSensitive: false);
@@ -103,10 +106,10 @@ class AdRepository {
       );
     }
     switch (filter.orderBy) {
-      case OrderBy.PRICE:
+      case OrderBy.DATE:
         queryBuilder.orderByDescending(keyAdCreated);
         break;
-      case OrderBy.DATE:
+      case OrderBy.PRICE:
       default:
         queryBuilder.orderByAscending(keyAdPrice);
         break;
@@ -115,7 +118,7 @@ class AdRepository {
       queryBuilder.whereGreaterThan(keyAdPrice, filter.minPrice);
     }
     if (filter.maxPrice != null && filter.maxPrice > 0) {
-      queryBuilder.whereGreaterThan(keyAdPrice, filter.maxPrice);
+      queryBuilder.whereLessThan(keyAdPrice, filter.maxPrice);
     }
     if (filter.vendorType != null &&
         filter.vendorType > 0 &&
@@ -134,11 +137,46 @@ class AdRepository {
     if (response.success && response.results == null) {
       return <Ad>[];
     } else if (response.success) {
+      return response.results.map((pObject) => Ad.fromParse(pObject)).toList();
+    } else {
+      return Future.error(ParseErrors.getDescription(response.error.code));
+    }
+  }
+
+  Future<List<Ad>> getMyAds(User user) async {
+    final currentUser = ParseUser('', '', '')..set(keyUserId, user.id);
+    final queryBuilder = QueryBuilder<ParseObject>(ParseObject(keyAdTable));
+    queryBuilder.setLimit(100);
+    queryBuilder.orderByDescending(keyAdCreated);
+    queryBuilder.whereEqualTo(keyAdOwner, currentUser.toPointer());
+    queryBuilder.includeObject([keyAdCategory, keyAdOwner]);
+    final response = await queryBuilder.query();
+    if (response.success && response.results == null) {
+      return <Ad>[];
+    } else if (response.success) {
       return response.results
-          .map((pObject) => Ad.fromJson(pObject.toJson()))
+          .map<Ad>((pObject) => Ad.fromParse(pObject))
           .toList();
     } else {
       return Future.error(ParseErrors.getDescription(response.error.code));
     }
+  }
+
+  Future<void> sell(Ad ad) async {
+    final parseObject = ParseObject(keyAdTable)
+      ..set(keyAdId, ad.id)
+      ..set(keyAdStatus, AdStatus.SOLD.index);
+    final response = await parseObject.save();
+    if (!response.success)
+      return Future.error(ParseErrors.getDescription(response.error.code));
+  }
+
+  Future<void> delete(Ad ad) async {
+    final parseObject = ParseObject(keyAdTable)
+      ..set(keyAdId, ad.id)
+      ..set(keyAdStatus, AdStatus.DELETED.index);
+    final response = await parseObject.save();
+    if (!response.success)
+      return Future.error(ParseErrors.getDescription(response.error.code));
   }
 }

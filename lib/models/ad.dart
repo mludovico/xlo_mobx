@@ -8,13 +8,13 @@ enum AdStatus { PENDING, ACTIVE, SOLD, DELETED }
 
 class Ad {
   String id;
-  List images;
+  List images = [];
   String title;
   String description;
   Category category;
   Address address;
   num price;
-  bool hidePhone;
+  bool hidePhone = false;
   AdStatus status;
   DateTime created;
   User user;
@@ -28,27 +28,42 @@ class Ad {
     this.category,
     this.address,
     this.price,
-    this.hidePhone,
+    this.hidePhone = false,
     this.status = AdStatus.PENDING,
     this.created,
     this.user,
     this.views,
   });
 
-  factory Ad.fromJson(Map json) => Ad(
-        id: json[keyAdId],
-        images: json[keyAdImages].map((item) => item['url']).toList(),
-        title: json[keyAdTitle],
-        description: json[keyAdDescription],
-        category: Category.fromParse(
-            ParseObject(json[keyAdCategory]['className'])
-              ..objectId = json[keyAdCategory][keyCategoryId]),
-        address: Address.fromJson(json),
-        price: json[keyAdPrice],
-        hidePhone: json[keyAdHidePhone],
-        status: AdStatus.values[json[keyAdStatus]],
-        created: DateTime.parse(json[keyAdCreated]),
-        user: User.fromJson(json[keyAdOwner]),
-        views: json[keyAdViews],
+  factory Ad.fromParse(ParseObject pObject) => Ad(
+        id: pObject.get(keyAdId),
+        images: pObject.get(keyAdImages).map((item) => item['url']).toList(),
+        title: pObject.get(keyAdTitle),
+        description: pObject.get(keyAdDescription),
+        category: Category.fromParse(pObject.get(keyAdCategory)
+          ..objectId = pObject[keyAdCategory][keyCategoryId]),
+        address: Address.fromParse(pObject),
+        price: pObject[keyAdPrice],
+        hidePhone: pObject[keyAdHidePhone],
+        status: AdStatus.values[pObject[keyAdStatus]],
+        created: pObject[keyAdCreated],
+        user: User.fromParse(
+            pObject.get(keyAdOwner)..objectId = pObject[keyAdOwner][keyUserId]),
+        views: pObject[keyAdViews],
       );
+
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'images': images,
+        'title': title,
+        'description': description,
+        'category': category,
+        'address': address,
+        'price': price,
+        'hidePhone': hidePhone,
+        'status': status,
+        'created': created,
+        'user': user,
+        'views': views,
+      };
 }

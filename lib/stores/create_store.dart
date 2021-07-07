@@ -13,10 +13,26 @@ part 'create_store.g.dart';
 class CreateStore = _CreateStore with _$CreateStore;
 
 abstract class _CreateStore with Store {
+  _CreateStore(this.ad) {
+    title = ad.title ?? '';
+    description = ad.description ?? '';
+    images = ad.images?.asObservable() ?? ObservableList();
+    category = ad.category;
+    priceText = ad.price?.toStringAsFixed(2)?.replaceAll('.', ',') ?? '';
+    hidePhone = ad.hidePhone;
+
+    if (ad.address != null)
+      cepStore = CepStore(ad.address?.cep);
+    else
+      cepStore = CepStore(null);
+  }
+
+  Ad ad;
+
   ObservableList images = ObservableList();
 
   @computed
-  bool get imagesValid => images.isNotEmpty;
+  bool get imagesValid => images?.isNotEmpty ?? false;
   String get imagesError {
     if (imagesValid || !showErrors)
       return null;
@@ -73,7 +89,7 @@ abstract class _CreateStore with Store {
       return 'Campo obrigatório';
   }
 
-  CepStore cepStore = CepStore();
+  CepStore cepStore;
 
   @computed
   Address get address => cepStore.address;
@@ -154,16 +170,15 @@ abstract class _CreateStore with Store {
 
   @action
   Future<void> _send() async {
-    final ad = Ad(
-      title: title,
-      description: description,
-      category: category,
-      price: price,
-      hidePhone: hidePhone,
-      images: images,
-      address: address,
-      user: GetIt.I<SessionStore>().user,
-    );
+    ad.title = title;
+    ad.description = description;
+    ad.category = category;
+    ad.price = price;
+    ad.hidePhone = hidePhone;
+    ad.images = images;
+    ad.address = address;
+    ad.user = GetIt.I<SessionStore>().user;
+
     try {
       savedAd = await AdRepository().save(ad);
       print(savedAd);
