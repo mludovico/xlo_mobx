@@ -28,7 +28,9 @@ class CategoryScreen extends StatelessWidget {
           child: Observer(
             builder: (_) {
               if (categoryStore.error != null)
-                return ErrorBox();
+                return ErrorBox(
+                  message: categoryStore.error,
+                );
               else if (categoryStore.categoryList.isEmpty)
                 return CircularProgressIndicator();
               else {
