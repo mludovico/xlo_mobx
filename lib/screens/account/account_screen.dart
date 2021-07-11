@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:xlo_mobx/components/custom_drawer/custom_drawer.dart';
+import 'package:xlo_mobx/screens/edit_account/edit_account_screen.dart';
+import 'package:xlo_mobx/screens/favorites/favorites_screen.dart';
 import 'package:xlo_mobx/screens/my_ads/my_ads_screen.dart';
 import 'package:xlo_mobx/stores/session_store.dart';
 
@@ -11,12 +14,6 @@ class AccountScreen extends StatelessWidget {
       drawer: CustomDrawer(),
       appBar: AppBar(
         title: Text('Minha Conta'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: GetIt.I<SessionStore>().logout,
-          )
-        ],
       ),
       body: Center(
         child: Card(
@@ -36,12 +33,14 @@ class AccountScreen extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            GetIt.I<SessionStore>().user.name,
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.purple,
-                              fontWeight: FontWeight.w900,
+                          Observer(
+                            builder: (_) => Text(
+                              GetIt.I<SessionStore>().user?.name ?? '',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.purple,
+                                fontWeight: FontWeight.w900,
+                              ),
                             ),
                           ),
                           Text(
@@ -63,6 +62,10 @@ class AccountScreen extends StatelessWidget {
                         ),
                         child: Text(
                           'EDITAR',
+                        ),
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (_) => EditAccountScreen()),
                         ),
                       ),
                     ),
@@ -96,6 +99,12 @@ class AccountScreen extends StatelessWidget {
                   ),
                 ),
                 trailing: Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (_) => FavoritesScreen(
+                            hideDrawer: true,
+                          )),
+                ),
               ),
             ],
           ),

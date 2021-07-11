@@ -17,6 +17,22 @@ mixin _$CategoryStore on _CategoryStore, Store {
               name: '_CategoryStore.allCategoryList'))
       .value;
 
+  final _$connectivityStoreAtom =
+      Atom(name: '_CategoryStore.connectivityStore');
+
+  @override
+  ConnectivityStore get connectivityStore {
+    _$connectivityStoreAtom.reportRead();
+    return super.connectivityStore;
+  }
+
+  @override
+  set connectivityStore(ConnectivityStore value) {
+    _$connectivityStoreAtom.reportWrite(value, super.connectivityStore, () {
+      super.connectivityStore = value;
+    });
+  }
+
   final _$errorAtom = Atom(name: '_CategoryStore.error');
 
   @override
@@ -36,7 +52,7 @@ mixin _$CategoryStore on _CategoryStore, Store {
       ActionController(name: '_CategoryStore');
 
   @override
-  dynamic setCategories(List<Category> categories) {
+  void setCategories(List<Category> categories) {
     final _$actionInfo = _$_CategoryStoreActionController.startAction(
         name: '_CategoryStore.setCategories');
     try {
@@ -60,6 +76,7 @@ mixin _$CategoryStore on _CategoryStore, Store {
   @override
   String toString() {
     return '''
+connectivityStore: ${connectivityStore},
 error: ${error},
 allCategoryList: ${allCategoryList}
     ''';

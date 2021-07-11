@@ -35,6 +35,7 @@ class CategoryScreen extends StatelessWidget {
                 final categories = showAll
                     ? categoryStore.allCategoryList
                     : categoryStore.categoryList;
+                print(categories.length);
                 return ListView.separated(
                   itemCount: categories.length,
                   separatorBuilder: (_, __) => Divider(
@@ -42,6 +43,7 @@ class CategoryScreen extends StatelessWidget {
                     color: Colors.grey,
                   ),
                   itemBuilder: (_, index) {
+                    print('Building item $index');
                     final category = categories[index];
                     return InkWell(
                       onTap: () {

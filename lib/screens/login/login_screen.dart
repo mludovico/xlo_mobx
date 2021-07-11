@@ -13,7 +13,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   LoginStore loginStore = LoginStore();
   ReactionDisposer disposer;
 
@@ -21,30 +20,27 @@ class _LoginScreenState extends State<LoginScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final session = GetIt.I<SessionStore>();
-    disposer = reaction(
-      (_) => session.isLoggedIn,
-      (isLoggedIn) {
-        if (isLoggedIn) {
-          Navigator.of(context).pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.greenAccent,
-              duration: Duration(seconds: 5),
-              content: Row(
-                children: [
-                  Icon(
-                    Icons.check_circle,
-                    color: Colors.white,
-                  ),
-                  SizedBox(width: 8,),
-                  Text('Bem vindo ${session.user.name}'),
-                ],
+    disposer = reaction((_) => session.isLoggedIn, (isLoggedIn) {
+      if (isLoggedIn) {
+        Navigator.of(context).pop(true);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.greenAccent,
+          duration: Duration(seconds: 5),
+          content: Row(
+            children: [
+              Icon(
+                Icons.check_circle,
+                color: Colors.white,
               ),
-            )
-          );
-        }
+              SizedBox(
+                width: 8,
+              ),
+              Text('Bem vindo ${session.user.name}'),
+            ],
+          ),
+        ));
       }
-    );
+    });
   }
 
   @override
@@ -59,9 +55,8 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           child: Card(
             margin: const EdgeInsets.symmetric(horizontal: 32),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16)
-            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             elevation: 0,
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -96,16 +91,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   Observer(
                     builder: (context) => TextField(
                       decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        isDense: true,
-                        errorText: loginStore.emailError
-                      ),
+                          border: const OutlineInputBorder(),
+                          isDense: true,
+                          errorText: loginStore.emailError),
                       onChanged: loginStore.setEmail,
                       enabled: !loginStore.loading,
                       keyboardType: TextInputType.emailAddress,
                     ),
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 3, bottom: 8),
                     child: Row(
@@ -123,10 +119,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                             'Esqueceu a senha?',
                             style: TextStyle(
-                              color: Colors.purple,
-                              fontSize: 13,
-                              decoration: TextDecoration.underline
-                            ),
+                                color: Colors.purple,
+                                fontSize: 13,
+                                decoration: TextDecoration.underline),
                           ),
                         ),
                       ],
@@ -145,7 +140,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       keyboardType: TextInputType.visiblePassword,
                     ),
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   Container(
                     height: 40,
                     child: Observer(
@@ -153,32 +150,35 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: ButtonStyle(
                           shape: MaterialStateProperty.all(
                             RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)
-                            ),
+                                borderRadius: BorderRadius.circular(20)),
                           ),
-                          foregroundColor: MaterialStateProperty.all(Colors.white),
-                          backgroundColor: MaterialStateProperty.resolveWith((states) {
+                          foregroundColor:
+                              MaterialStateProperty.all(Colors.white),
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
                             if (states.contains(MaterialState.disabled))
                               return Colors.orange.withAlpha(120);
                             return Colors.orange;
                           }),
                         ),
                         onPressed: loginStore.signIn,
-                        child: loginStore.loading ? SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation(Colors.white),
-                          )
-                        )
-                          :
-                        Text(
-                          'ENTRAR',
-                        ),
+                        child: loginStore.loading
+                            ? SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  valueColor:
+                                      AlwaysStoppedAnimation(Colors.white),
+                                ))
+                            : Text(
+                                'ENTRAR',
+                              ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12,),
+                  const SizedBox(
+                    height: 12,
+                  ),
                   Divider(),
                   Wrap(
                     alignment: WrapAlignment.spaceBetween,
@@ -195,8 +195,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         onTap: () {
                           Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (_) => RegisterScreen())
-                          );
+                              MaterialPageRoute(
+                                  builder: (_) => RegisterScreen()));
                         },
                       ),
                     ],

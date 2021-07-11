@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:xlo_mobx/components/custom_drawer/custom_drawer.dart';
+import 'package:xlo_mobx/components/empty_card.dart';
 import 'package:xlo_mobx/screens/home/widgets/ad_tile.dart';
 import 'package:xlo_mobx/screens/home/widgets/create_ad_button.dart';
 import 'package:xlo_mobx/screens/home/widgets/info_message.dart';
@@ -95,9 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }
                     if (homeStore.adList.isEmpty) {
-                      return InfoMessage(
-                        icon: Icons.thumb_down_outlined,
-                        text: 'Hummmm....nenhum anúncio encontrado!',
+                      return EmptyCard(
+                        text: 'Nenhum anúncio encontrado!',
                       );
                     }
                     return ListView.builder(
